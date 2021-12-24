@@ -11,26 +11,34 @@ source:
   sha256: ccb8d9cea310f1715d5ed3d2d092db9bf50ff2762cf94a0dd9dfab7774a727fe
 
 build:
-  number: 1
+  number: 0
   script: {{ PYTHON }} -m pip install . -vv  # [not win]
+  entry_points:
+    - pyspnego-parse = spnego.__main__:main
 
 requirements:
   build:
-    - python                                 # [build_platform != target_platform]
-    - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-    - cython                                 # [build_platform != target_platform]
     - {{ compiler('c') }}
   host:
-    - python  >=3.7
+    - python
     - cryptography
     - cython
     - pip
+    - setuptools
+    - wheel
   run:
-    - python  >=3.7
+    - python >=3.6
     - cryptography
-    - ruamel.yaml
-  run_constrained:
-    - python-gssapi >=1.5.0  # [not win]
+    # Optional dependency, see https://github.com/jborean93/pyspnego#optional-requirements
+    # This package isn't included in SOW Packages list on s390x, 
+    # and ruamel.yaml isn't available on s390x
+    - ruamel.yaml  # [not s390x]
+  # While pyspnego supports Kerberos authentication on Linux, 
+  # it isn't included by default due to its reliance on system packages to be present.
+  # For Kerberos authentication on Linux python-gssapi and pykrb5 can be installed 
+  # to add extra features that do not come with the base package
+  #run_constrained:
+  #  - python-gssapi >=1.5.0  # [not win]
 
 test:
   imports:
@@ -46,7 +54,10 @@ about:
   home: https://github.com/jborean93/pyspnego
   summary: Windows Negotiate Authentication Client and Server
   license: MIT
+  license_family: MIT
   license_file: LICENSE
+  dev_url: https://github.com/jborean93/pyspnego
+  doc_url: https://github.com/jborean93/pyspnego/blob/main/README.md
 
 extra:
   recipe-maintainers:
