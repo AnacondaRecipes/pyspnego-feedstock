@@ -29,7 +29,7 @@ requirements:
   run:
     - python >=3.6
     - cryptography
-    # Optional dependency
+    # Optional dependency, see https://github.com/jborean93/pyspnego#optional-requirements
     - ruamel.yaml
   # While pyspnego supports Kerberos authentication on Linux, 
   # it isn't included by default due to its reliance on system packages to be present.
