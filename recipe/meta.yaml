@@ -30,7 +30,9 @@ requirements:
     - python >=3.6
     - cryptography
     # Optional dependency, see https://github.com/jborean93/pyspnego#optional-requirements
-    - ruamel.yaml
+    # This package isn't included in SOW Packages list on s390x, 
+    # and ruamel.yaml isn't available on s390x
+    - ruamel.yaml  # [not s390x]
   # While pyspnego supports Kerberos authentication on Linux, 
   # it isn't included by default due to its reliance on system packages to be present.
   # For Kerberos authentication on Linux python-gssapi and pykrb5 can be installed 
