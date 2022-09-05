@@ -11,7 +11,7 @@ source:
   sha256: ccb8d9cea310f1715d5ed3d2d092db9bf50ff2762cf94a0dd9dfab7774a727fe
 
 build:
-  number: 0
+  number: 2
   script: {{ PYTHON }} -m pip install . -vv  # [not win]
   entry_points:
     - pyspnego-parse = spnego.__main__:main
@@ -56,8 +56,12 @@ about:
   license: MIT
   license_family: MIT
   license_file: LICENSE
+  license_url: https://github.com/jborean93/pyspnego/blob/main/LICENSE
   dev_url: https://github.com/jborean93/pyspnego
   doc_url: https://github.com/jborean93/pyspnego/blob/main/README.md
+  description: |
+    Library to handle SPNEGO (Negotiate, NTLM, Kerberos) and CredSSP authentication. 
+    Also includes a packet parser that can be used to decode raw NTLM/SPNEGO/Kerberos tokens into a human readable format.
 
 extra:
   recipe-maintainers:
