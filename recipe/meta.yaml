@@ -56,7 +56,6 @@ about:
   license: MIT
   license_family: MIT
   license_file: LICENSE
-  license_url: https://github.com/jborean93/pyspnego/blob/main/LICENSE
   dev_url: https://github.com/jborean93/pyspnego
   doc_url: https://github.com/jborean93/pyspnego/blob/main/README.md
   description: |
