@@ -21,13 +21,13 @@ requirements:
     - {{ compiler('c') }}
   host:
     - python
-    - cryptography
-    - cython
+    - cryptography 39.0.1
+    - cython 0.29.32
     - pip
     - setuptools
     - wheel
   run:
-    - python >=3.6
+    - python
     - cryptography
     # Optional dependency, see https://github.com/jborean93/pyspnego#optional-requirements
     # This package isn't included in SOW Packages list on s390x, 
