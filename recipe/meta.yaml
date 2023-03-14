@@ -1,5 +1,5 @@
 {% set name = "pyspnego" %}
-{% set version = "0.3.1" %}
+{% set version = "0.8.0" %}
 
 
 package:
@@ -8,7 +8,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/pyspnego-{{ version }}.tar.gz
-  sha256: ccb8d9cea310f1715d5ed3d2d092db9bf50ff2762cf94a0dd9dfab7774a727fe
+  sha256: e0499cc066c56762f8a315bb053243d34240cb85e384afc6b87b4fa0142543df
 
 build:
   number: 2
