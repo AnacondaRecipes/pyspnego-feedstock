@@ -21,7 +21,7 @@ requirements:
     - {{ compiler('c') }}
   host:
     - python
-    - cryptography 39.0.1
+    - cryptography 38.0.4
     - cython 0.29.32
     - pip
     - setuptools
