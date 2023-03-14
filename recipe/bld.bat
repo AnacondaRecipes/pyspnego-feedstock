@@ -3,4 +3,4 @@ setlocal EnableDelayedExpansion
 echo on
 
 %PYTHON% setup.py build
-%PYTHON% setup.py install
+%PYTHON% -m pip install . --no-deps -vv 

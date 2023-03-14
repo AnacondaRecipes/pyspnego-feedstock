@@ -1,5 +1,5 @@
 {% set name = "pyspnego" %}
-{% set version = "0.3.1" %}
+{% set version = "0.8.0" %}
 
 
 package:
@@ -8,11 +8,11 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/pyspnego-{{ version }}.tar.gz
-  sha256: ccb8d9cea310f1715d5ed3d2d092db9bf50ff2762cf94a0dd9dfab7774a727fe
+  sha256: e0499cc066c56762f8a315bb053243d34240cb85e384afc6b87b4fa0142543df
 
 build:
   number: 2
-  script: {{ PYTHON }} -m pip install . -vv  # [not win]
+  script: {{ PYTHON }} -m pip install . --no-deps -vv  # [not win]
   entry_points:
     - pyspnego-parse = spnego.__main__:main
 
@@ -21,13 +21,13 @@ requirements:
     - {{ compiler('c') }}
   host:
     - python
-    - cryptography
-    - cython
+    - cryptography 38.0.4
+    - cython 0.29.32
     - pip
     - setuptools
     - wheel
   run:
-    - python >=3.6
+    - python
     - cryptography
     # Optional dependency, see https://github.com/jborean93/pyspnego#optional-requirements
     # This package isn't included in SOW Packages list on s390x, 
@@ -56,7 +56,6 @@ about:
   license: MIT
   license_family: MIT
   license_file: LICENSE
-  license_url: https://github.com/jborean93/pyspnego/blob/main/LICENSE
   dev_url: https://github.com/jborean93/pyspnego
   doc_url: https://github.com/jborean93/pyspnego/blob/main/README.md
   description: |
