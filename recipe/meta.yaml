@@ -1,14 +1,13 @@
 {% set name = "pyspnego" %}
-{% set version = "0.9.2" %}
-
+{% set version = "0.10.2" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/pyspnego-{{ version }}.tar.gz
-  sha256: 0e16cb331f1bd9c85f9b80e2be04bb5da2ecaff678cc0342f68b45e4667d7966
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 9a22c23aeae7b4424fdb2482450d3f8302ac012e2644e1cfe735cf468fcd12ed
 
 build:
   number: 0
@@ -17,34 +16,30 @@ build:
     - pyspnego-parse = spnego.__main__:main
 
 requirements:
-  build:
-    - {{ compiler('c') }}
   host:
     - python
-    - cython 0.29
     - pip
     - setuptools
     - wheel
   run:
     - python
     - cryptography
+    - sspilib >= 0.1.0       # [win]
     # Optional dependency, see https://github.com/jborean93/pyspnego#optional-requirements
-    # This package isn't included in SOW Packages list on s390x, 
+    # This package isn't available on s390x,
     # and ruamel.yaml isn't available on s390x
-    - ruamel.yaml  # [not s390x]
+    - ruamel.yaml            # [not s390x]
   run_constrained:
     - python-gssapi >=1.6.0  # [not win]
-    - krb5 >=0.3.0  # [not win]
+    - pykrb5 >=0.3.0         # [not win]
 
 test:
   imports:
     - spnego
-    - spnego._ntlm_raw
-    - spnego._sspi_raw  # [win]
-  commands:
-    - pip check
   requires:
     - pip
+  commands:
+    - pip check
 
 about:
   home: https://github.com/jborean93/pyspnego
