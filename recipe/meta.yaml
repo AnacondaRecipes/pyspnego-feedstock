@@ -7,21 +7,21 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/pyspnego-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: 0e16cb331f1bd9c85f9b80e2be04bb5da2ecaff678cc0342f68b45e4667d7966
 
 build:
-  number: 0
+  number: 1
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   entry_points:
     - pyspnego-parse = spnego.__main__:main
 
 requirements:
-  build:
-    - {{ compiler('c') }}
+  build:                       # [win]
+    - {{ compiler('c') }}      # [win]
   host:
     - python
-    - cython 0.29
+    - cython >=0.29.29,<3.0.0  # [win]
     - pip
     - setuptools
     - wheel
@@ -29,22 +29,20 @@ requirements:
     - python
     - cryptography
     # Optional dependency, see https://github.com/jborean93/pyspnego#optional-requirements
-    # This package isn't included in SOW Packages list on s390x, 
-    # and ruamel.yaml isn't available on s390x
-    - ruamel.yaml  # [not s390x]
+    - ruamel.yaml
   run_constrained:
     - python-gssapi >=1.6.0  # [not win]
-    - krb5 >=0.3.0  # [not win]
+    - pykrb5 >=0.3.0         # [not win]
 
 test:
   imports:
     - spnego
     - spnego._ntlm_raw
     - spnego._sspi_raw  # [win]
-  commands:
-    - pip check
   requires:
     - pip
+  commands:
+    - pip check
 
 about:
   home: https://github.com/jborean93/pyspnego
@@ -55,8 +53,9 @@ about:
   dev_url: https://github.com/jborean93/pyspnego
   doc_url: https://github.com/jborean93/pyspnego/blob/main/README.md
   description: |
-    Library to handle SPNEGO (Negotiate, NTLM, Kerberos) and CredSSP authentication. 
-    Also includes a packet parser that can be used to decode raw NTLM/SPNEGO/Kerberos tokens into a human readable format.
+    Library to handle SPNEGO (Negotiate, NTLM, Kerberos) and CredSSP authentication.
+    Also includes a packet parser that can be used to decode
+    raw NTLM/SPNEGO/Kerberos tokens into a human readable format.
 
 extra:
   recipe-maintainers:
