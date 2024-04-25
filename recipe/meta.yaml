@@ -28,21 +28,26 @@ requirements:
   run:
     - python
     - cryptography
-    # Optional dependency, see https://github.com/jborean93/pyspnego#optional-requirements
+    # Optional dependency for pyspengo-parse, see https://github.com/jborean93/pyspnego#optional-requirements
     - ruamel.yaml
   run_constrained:
     - python-gssapi >=1.6.0  # [not win]
     - pykrb5 >=0.3.0         # [not win]
 
 test:
+  source_files:
+    - tests
   imports:
     - spnego
     - spnego._ntlm_raw
     - spnego._sspi_raw  # [win]
   requires:
     - pip
+    - pytest
+    - pytest-mock
   commands:
     - pip check
+    - pytest -v
 
 about:
   home: https://github.com/jborean93/pyspnego
