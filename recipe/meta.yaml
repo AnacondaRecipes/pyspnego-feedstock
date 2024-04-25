@@ -7,44 +7,50 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/pyspnego-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: 0e16cb331f1bd9c85f9b80e2be04bb5da2ecaff678cc0342f68b45e4667d7966
 
 build:
-  number: 0
+  number: 1
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   entry_points:
     - pyspnego-parse = spnego.__main__:main
 
 requirements:
-  build:
-    - {{ compiler('c') }}
+  build:                       # [win]
+    - {{ compiler('c') }}      # [win]
   host:
     - python
-    - cython 0.29
+    - cython >=0.29.29,<3.0.0  # [win]
     - pip
     - setuptools
     - wheel
   run:
     - python
     - cryptography
-    # Optional dependency, see https://github.com/jborean93/pyspnego#optional-requirements
-    # This package isn't included in SOW Packages list on s390x, 
-    # and ruamel.yaml isn't available on s390x
-    - ruamel.yaml  # [not s390x]
+    # Optional dependency for pyspengo-parse, see https://github.com/jborean93/pyspnego#optional-requirements
+    - ruamel.yaml
   run_constrained:
     - python-gssapi >=1.6.0  # [not win]
-    - krb5 >=0.3.0  # [not win]
+    - pykrb5 >=0.3.0         # [not win]
 
 test:
+  source_files:
+    - tests
   imports:
     - spnego
     - spnego._ntlm_raw
     - spnego._sspi_raw  # [win]
-  commands:
-    - pip check
   requires:
     - pip
+    - pytest
+    - pytest-mock
+  commands:
+    - pip check
+    - pytest -v  # [unix]
+    # Skip some tests on win64 because of the error
+    # "spnego.exceptions.InvalidTokenError: SpnegoError (9): The logon attempt failed"
+    - pytest -v -k "not (test_ntlm_iov_wrapping or test_ntlm_iov_unwrapping_as_stream or test_sspi_wrap_no_encryption)" --ignore tests/test_auth.py # [win]
 
 about:
   home: https://github.com/jborean93/pyspnego
@@ -55,8 +61,9 @@ about:
   dev_url: https://github.com/jborean93/pyspnego
   doc_url: https://github.com/jborean93/pyspnego/blob/main/README.md
   description: |
-    Library to handle SPNEGO (Negotiate, NTLM, Kerberos) and CredSSP authentication. 
-    Also includes a packet parser that can be used to decode raw NTLM/SPNEGO/Kerberos tokens into a human readable format.
+    Library to handle SPNEGO (Negotiate, NTLM, Kerberos) and CredSSP authentication.
+    Also includes a packet parser that can be used to decode
+    raw NTLM/SPNEGO/Kerberos tokens into a human readable format.
 
 extra:
   recipe-maintainers:
