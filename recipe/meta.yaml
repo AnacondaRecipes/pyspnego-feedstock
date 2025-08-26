@@ -1,5 +1,5 @@
 {% set name = "pyspnego" %}
-{% set version = "0.9.2" %}
+{% set version = "0.11.2" %}
 
 
 package:
@@ -7,32 +7,42 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 0e16cb331f1bd9c85f9b80e2be04bb5da2ecaff678cc0342f68b45e4667d7966
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 994388d308fb06e4498365ce78d222bf4f3570b6df4ec95738431f61510c971b
 
 build:
-  number: 1
+  number: 0
+  skip: True # [py<38]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   entry_points:
     - pyspnego-parse = spnego.__main__:main
 
 requirements:
-  build:                       # [win]
-    - {{ compiler('c') }}      # [win]
   host:
     - python
-    - cython >=0.29.29,<3.0.0  # [win]
     - pip
     - setuptools
-    - wheel
   run:
     - python
     - cryptography
+    - sspilib >=0.1.0  # [win]
     # Optional dependency for pyspengo-parse, see https://github.com/jborean93/pyspnego#optional-requirements
     - ruamel.yaml
   run_constrained:
     - python-gssapi >=1.6.0  # [not win]
     - pykrb5 >=0.3.0         # [not win]
+
+
+# Windows fails those tests
+{% set tests_to_skip = "test_negotiate_through_python_ntlm" %}
+{% set tests_to_skip = tests_to_skip + " or test_negotiate_with_ntlm_hash" %}
+{% set tests_to_skip = tests_to_skip + " or test_sspi_ntlm_auth_no_sign_or_seal" %}
+{% set tests_to_skip = tests_to_skip + " or test_sspi_ntlm_auth" %}
+{% set tests_to_skip = tests_to_skip + " or test_sspi_ntlm_lm_compat" %}
+{% set tests_to_skip = tests_to_skip + " or test_credssp_multiple_creds" %}
+{% set tests_to_skip = tests_to_skip + " or test_ntlm_iov_wrapping" %}
+{% set tests_to_skip = tests_to_skip + " or test_ntlm_iov_unwrapping_as_stream" %}
+{% set tests_to_skip = tests_to_skip + " or test_sspi_wrap_no_encryption" %}
 
 test:
   source_files:
@@ -40,17 +50,15 @@ test:
   imports:
     - spnego
     - spnego._ntlm_raw
-    - spnego._sspi_raw  # [win]
   requires:
     - pip
     - pytest
     - pytest-mock
+    - sspilib >=0.1.0  # [win]
   commands:
     - pip check
-    - pytest -v  # [unix]
-    # Skip some tests on win64 because of the error
-    # "spnego.exceptions.InvalidTokenError: SpnegoError (9): The logon attempt failed"
-    - pytest -v -k "not (test_ntlm_iov_wrapping or test_ntlm_iov_unwrapping_as_stream or test_sspi_wrap_no_encryption)" --ignore tests/test_auth.py # [win]
+    - pytest tests -v  # [not win]
+    - pytest tests -v -k "not ({{ tests_to_skip }})"  # [win]
 
 about:
   home: https://github.com/jborean93/pyspnego
