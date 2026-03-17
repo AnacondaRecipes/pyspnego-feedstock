@@ -1,18 +1,27 @@
 {% set name = "pyspnego" %}
-{% set version = "0.11.2" %}
+{% set version = "0.12.1" %}
+{% set tests_to_skip = "test_negotiate_through_python_ntlm" %}
+{% set tests_to_skip = tests_to_skip + " or test_negotiate_with_ntlm_hash" %}
+{% set tests_to_skip = tests_to_skip + " or test_sspi_ntlm_auth_no_sign_or_seal" %}
+{% set tests_to_skip = tests_to_skip + " or test_sspi_ntlm_auth" %}
+{% set tests_to_skip = tests_to_skip + " or test_sspi_ntlm_lm_compat" %}
+{% set tests_to_skip = tests_to_skip + " or test_credssp_multiple_creds" %}
+{% set tests_to_skip = tests_to_skip + " or test_ntlm_iov_wrapping" %}
+{% set tests_to_skip = tests_to_skip + " or test_ntlm_iov_unwrapping_as_stream" %}
+{% set tests_to_skip = tests_to_skip + " or test_sspi_wrap_no_encryption" %}
 
-
+# Windows fails those tests
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 994388d308fb06e4498365ce78d222bf4f3570b6df4ec95738431f61510c971b
+  sha256: ff4fb6df38202a012ea2a0f43091ae9680878443f0ea61c9ea0e2e8152a4b810
 
 build:
   number: 0
-  skip: True # [py<38]
+  skip: true  # [py<38]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   entry_points:
     - pyspnego-parse = spnego.__main__:main
@@ -30,19 +39,7 @@ requirements:
     - ruamel.yaml
   run_constrained:
     - python-gssapi >=1.6.0  # [not win]
-    - pykrb5 >=0.3.0         # [not win]
-
-
-# Windows fails those tests
-{% set tests_to_skip = "test_negotiate_through_python_ntlm" %}
-{% set tests_to_skip = tests_to_skip + " or test_negotiate_with_ntlm_hash" %}
-{% set tests_to_skip = tests_to_skip + " or test_sspi_ntlm_auth_no_sign_or_seal" %}
-{% set tests_to_skip = tests_to_skip + " or test_sspi_ntlm_auth" %}
-{% set tests_to_skip = tests_to_skip + " or test_sspi_ntlm_lm_compat" %}
-{% set tests_to_skip = tests_to_skip + " or test_credssp_multiple_creds" %}
-{% set tests_to_skip = tests_to_skip + " or test_ntlm_iov_wrapping" %}
-{% set tests_to_skip = tests_to_skip + " or test_ntlm_iov_unwrapping_as_stream" %}
-{% set tests_to_skip = tests_to_skip + " or test_sspi_wrap_no_encryption" %}
+    - pykrb5 >=0.3.0  # [not win]
 
 test:
   source_files:
@@ -72,6 +69,7 @@ about:
     Library to handle SPNEGO (Negotiate, NTLM, Kerberos) and CredSSP authentication.
     Also includes a packet parser that can be used to decode
     raw NTLM/SPNEGO/Kerberos tokens into a human readable format.
+
 
 extra:
   recipe-maintainers:
