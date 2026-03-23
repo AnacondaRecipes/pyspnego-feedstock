@@ -1,5 +1,5 @@
 {% set name = "pyspnego" %}
-{% set version = "0.11.2" %}
+{% set version = "0.12.1" %}
 
 
 package:
@@ -8,11 +8,11 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 994388d308fb06e4498365ce78d222bf4f3570b6df4ec95738431f61510c971b
+  sha256: ff4fb6df38202a012ea2a0f43091ae9680878443f0ea61c9ea0e2e8152a4b810
 
 build:
   number: 0
-  skip: True # [py<38]
+  skip: True # [py<39]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
   entry_points:
     - pyspnego-parse = spnego.__main__:main
@@ -21,11 +21,11 @@ requirements:
   host:
     - python
     - pip
-    - setuptools
+    - setuptools >=77.0.3
   run:
     - python
     - cryptography
-    - sspilib >=0.1.0  # [win]
+    - sspilib >=0.3.0  # [win]
     # Optional dependency for pyspengo-parse, see https://github.com/jborean93/pyspnego#optional-requirements
     - ruamel.yaml
   run_constrained:
@@ -49,6 +49,11 @@ test:
     - tests
   imports:
     - spnego
+    - spnego.auth
+    - spnego.channel_bindings
+    - spnego.exceptions
+    - spnego.iov
+    - spnego.tls
     - spnego._ntlm_raw
   requires:
     - pip
